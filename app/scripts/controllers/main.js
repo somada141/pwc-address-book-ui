@@ -8,7 +8,12 @@
  * Controller of the pabui
  */
 angular.module('pabui')
-  .controller('MainCtrl', function (config, $scope, $http, FileUploader, Notification) {
+  .controller('MainCtrl', function (config, $scope, $http, FileUploader, Notification, ngProgressFactory) {
+
+    // Instantiate a new progress-bar and set its width and color.
+    $scope.progressbar = ngProgressFactory.createInstance();
+    $scope.progressbar.setHeight('3px');
+    $scope.progressbar.setColor('#337ab7');
 
     // Initialize empty arrays to hold the contacts.
     // Array to hold contacts currently in the DB.
@@ -115,17 +120,33 @@ angular.module('pabui')
       removeAfterUpload: true
     });
 
-    // File-upload callback for successful upload. When a CSV has been uploaded and processed by the API backend the
-    // contacts within are returned in the JSON response.
+    // File-upload callback called upon successful upload. When a CSV has been uploaded and processed by the API
+    // backend the contacts within are returned in the JSON response.
     uploader.onSuccessItem = function(fileItem, response, status, headers) {
       // Copy the returned contacts under the `contacts_candidates` array.
       angular.copy(response, $scope.contacts_candidates);
     };
 
-    // File-upload callback for successful upload. Should a failure occur when processing the uploaded CSV via the API
-    // post a notification with the exception information.
+    // File-upload callback called upon upload error. Should a failure occur when processing the uploaded CSV via the
+    // API post a notification with the exception information.
     uploader.onErrorItem = function(fileItem, response, status, headers) {
       Notification.error({title: 'Error', message: response.description, delay: 20000});
+    };
+
+    // File-upload callback called when a new file is added. This callback starts the progress bar.
+    uploader.onBeforeUploadItem = function(item) {
+      $scope.progressbar.start();
+    };
+
+    // File-upload callback called during the upload. This callback updated the progress bar.
+    uploader.onProgressItem = function(item, progress) {
+      $scope.progressbar.set(progress);
+    };
+
+    // File-upload callback called when all uploads are complete. This callback completes and fades-out the progress
+    // bar.
+    uploader.onCompleteAll = function() {
+      $scope.progressbar.complete();
     };
 
     // Force contact update by fetching them through the API.
