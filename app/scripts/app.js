@@ -14,7 +14,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'angularFileUpload',
-    'ui-notification'
+    'ui-notification',
+    'ngProgress'
   ])
   .config(function ($routeProvider) {
     $routeProvider
