@@ -16,18 +16,22 @@ angular.module('pwcui')
     // Array to hold contact candidates.
     $scope.contacts_candidates = [];
 
+    // Fetches all contacts from the database via the POST API.
     $scope.refresh_contacts = function() {
       $http({url: 'http://127.0.0.1:8000/contacts/get', method: 'POST'}).then(function (response) {
+        // Copy the retrieved contacts into the `$scope`.
         angular.copy(response.data, $scope.contacts);
       });
     };
 
+    // Adds all `contacts_candidates` to the DB via the API and reports on accepted/rejected contacts.
     $scope.add_contacts = function() {
-
+      // Form an object containing the contacts to be added adhering to the API schema.
       var contacts_to_add = {
         contacts: $scope.contacts_candidates
       };
 
+      // Perform the POST request.
       $http({
         url: 'http://127.0.0.1:8000/contacts/add',
         method: 'POST',
@@ -35,49 +39,64 @@ angular.module('pwcui')
       }).then(function (response) {
         console.log(response);
 
+        // Iterate over the accepted contacts and post a notification.
         for (var i = 0; i < response.data.contacts.accepted.length; i++) {
           var contact_accepted = response.data.contacts.accepted[i];
           var contact_accepted_dets = contact_accepted.name + ' (' + contact_accepted.email + ')';
           Notification.success({title: 'Accepted', message: contact_accepted_dets});
           $scope.reject_candidate(contact_accepted.email);
         }
+
+        // Iterate over the rejected contacts and post a notification.
         for (var j = 0; j < response.data.contacts.rejected.length; j++) {
           var contact_rejected = response.data.contacts.rejected[j];
           var contact_rejected_dets = contact_rejected.name + " (" + contact_rejected.email + ")";
           Notification.warning({title: 'Rejected', message: contact_rejected_dets});
         }
+
+        // Re-fetch the contacts from the DB to update the listing.
         $scope.refresh_contacts();
-        // console.log(response.data);
       });
     };
 
     // Reject a given candidate contact from the candidate pool through its email address.
     $scope.reject_candidate = function (contact_candidate_email) {
+      // Initialize a new array to hold the remaining candidates following the rejection of one.
       var contact_candidates_new = [];
+
+      // Iterate over the contact candidates and keep all but the one that was rejected.
       for (var i = 0; i < $scope.contacts_candidates.length; i++) {
         var contact_candidate = $scope.contacts_candidates[i];
         if (contact_candidate.email !== contact_candidate_email) {
           contact_candidates_new.push(contact_candidate);
+        // Post a notification for the rejected contact.
         } else {
           var contact_candidate_dets = contact_candidate.name + " (" + contact_candidate.email + ")";
           Notification.info({title: 'Dropped', message: contact_candidate_dets});
         }
       }
+
+      // Set the new candidates into the scope.
       $scope.contacts_candidates = contact_candidates_new;
     };
 
     // Accept a given candidate contact and push it to the DB through its email address.
     $scope.accept_candidate = function (contact_candidate_email) {
+      // Initialize a new array to hold the remaining candidates following the rejection of one.
       var contact_candidates_new = [];
+
+      // Iterate over the contact candidates and keep all but the one that was accepted.
       for (var i = 0; i < $scope.contacts_candidates.length; i++) {
         var contact_candidate = $scope.contacts_candidates[i];
         if (contact_candidate.email !== contact_candidate_email) {
           contact_candidates_new.push(contact_candidate);
+        // Update the accepted contact via the API.
         } else {
           $http({
             url: 'http://127.0.0.1:8000/contacts/update',
             method: 'POST',
             data: angular.toJson({contacts:[contact_candidate]})
+          // Post a notification for the accepted contact.
           }).then(function (response) {
             console.log(response);
             var contact_candidate_dets = contact_candidate.name + " (" + contact_candidate.email + ")";
@@ -86,8 +105,8 @@ angular.module('pwcui')
           });
         }
       }
+      // Set the new candidates into the scope.
       $scope.contacts_candidates = contact_candidates_new;
-
     };
 
 
