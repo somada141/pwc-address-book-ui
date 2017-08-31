@@ -26,5 +26,7 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+  }).constant('config', {
+    pabapi_url: 'http://localhost:8000'
   });
 
