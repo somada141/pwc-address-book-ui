@@ -111,7 +111,8 @@ angular.module('pwcui')
 
     // File uploader object as required by the `angular-file-upload` component.
     var uploader = $scope.uploader = new FileUploader({
-      url: 'http://127.0.0.1:8000/upload'
+      url: 'http://127.0.0.1:8000/upload',
+      removeAfterUpload: true
     });
 
     // File-upload callback for successful upload. When a CSV has been uploaded and processed by the API backend the
