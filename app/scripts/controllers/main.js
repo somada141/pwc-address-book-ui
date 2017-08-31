@@ -109,40 +109,24 @@ angular.module('pwcui')
       $scope.contacts_candidates = contact_candidates_new;
     };
 
-
-
+    // File uploader object as required by the `angular-file-upload` component.
     var uploader = $scope.uploader = new FileUploader({
       url: 'http://127.0.0.1:8000/upload'
     });
 
-    // FILTERS
-
-    // a sync filter
-    uploader.filters.push({
-      name: 'syncFilter',
-      fn: function(item /*{File|FileLikeObject}*/, options) {
-        console.log('syncFilter');
-        return this.queue.length < 10;
-      }
-    });
-
-    // an async filter
-    uploader.filters.push({
-      name: 'asyncFilter',
-      fn: function(item /*{File|FileLikeObject}*/, options, deferred) {
-        console.log('asyncFilter');
-        setTimeout(deferred.resolve, 1e3);
-      }
-    });
-
+    // File-upload callback for successful upload. When a CSV has been uploaded and processed by the API backend the
+    // contacts within are returned in the JSON response.
     uploader.onSuccessItem = function(fileItem, response, status, headers) {
+      // Copy the returned contacts under the `contacts_candidates` array.
       angular.copy(response, $scope.contacts_candidates);
     };
+
+    // File-upload callback for successful upload. Should a failure occur when processing the uploaded CSV via the API
+    // post a notification with the exception information.
     uploader.onErrorItem = function(fileItem, response, status, headers) {
       Notification.error({title: 'Error', message: response.description, delay: 20000});
     };
 
     // Force contact update by fetching them through the API.
     $scope.refresh_contacts();
-
   });
