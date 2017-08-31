@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name pwcui.controller:MainCtrl
+ * @name pabui.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the pwcui
+ * Controller of the pabui
  */
-angular.module('pwcui')
+angular.module('pabui')
   .controller('MainCtrl', function ($scope, $http, FileUploader, Notification) {
 
     // Initialize empty arrays to hold the contacts.

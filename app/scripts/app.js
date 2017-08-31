@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc overview
- * @name pwcui
+ * @name pabui
  * @description
- * # pwcui
+ * # pabui
  *
  * Main module of the application.
  */
 angular
-  .module('pwcui', [
+  .module('pabui', [
     'ngResource',
     'ngRoute',
     'ngSanitize',
