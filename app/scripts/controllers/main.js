@@ -8,7 +8,7 @@
  * Controller of the pabui
  */
 angular.module('pabui')
-  .controller('MainCtrl', function ($scope, $http, FileUploader, Notification) {
+  .controller('MainCtrl', function (config, $scope, $http, FileUploader, Notification) {
 
     // Initialize empty arrays to hold the contacts.
     // Array to hold contacts currently in the DB.
@@ -18,7 +18,7 @@ angular.module('pabui')
 
     // Fetches all contacts from the database via the POST API.
     $scope.refresh_contacts = function() {
-      $http({url: 'http://127.0.0.1:8000/contacts/get', method: 'POST'}).then(function (response) {
+      $http({url: config.pabapi_url + '/contacts/get', method: 'POST'}).then(function (response) {
         // Copy the retrieved contacts into the `$scope`.
         angular.copy(response.data, $scope.contacts);
       });
@@ -33,7 +33,7 @@ angular.module('pabui')
 
       // Perform the POST request.
       $http({
-        url: 'http://127.0.0.1:8000/contacts/add',
+        url: config.pabapi_url + '/contacts/add',
         method: 'POST',
         data: angular.toJson(contacts_to_add)
       }).then(function (response) {
@@ -93,7 +93,7 @@ angular.module('pabui')
         // Update the accepted contact via the API.
         } else {
           $http({
-            url: 'http://127.0.0.1:8000/contacts/update',
+            url: config.pabapi_url + '/contacts/update',
             method: 'POST',
             data: angular.toJson({contacts:[contact_candidate]})
           // Post a notification for the accepted contact.
@@ -111,7 +111,7 @@ angular.module('pabui')
 
     // File uploader object as required by the `angular-file-upload` component.
     var uploader = $scope.uploader = new FileUploader({
-      url: 'http://127.0.0.1:8000/upload',
+      url: config.pabapi_url + '/upload',
       removeAfterUpload: true
     });
 
