@@ -43,7 +43,7 @@ angular.module('pwcui')
         for (var i = 0; i < response.data.contacts.accepted.length; i++) {
           var contact_accepted = response.data.contacts.accepted[i];
           var contact_accepted_dets = contact_accepted.name + ' (' + contact_accepted.email + ')';
-          Notification.success({title: 'Accepted', message: contact_accepted_dets});
+          Notification.success({title: 'Accepted', message: contact_accepted_dets, delay: 10000});
           $scope.reject_candidate(contact_accepted.email);
         }
 
@@ -51,7 +51,7 @@ angular.module('pwcui')
         for (var j = 0; j < response.data.contacts.rejected.length; j++) {
           var contact_rejected = response.data.contacts.rejected[j];
           var contact_rejected_dets = contact_rejected.name + " (" + contact_rejected.email + ")";
-          Notification.warning({title: 'Rejected', message: contact_rejected_dets});
+          Notification.warning({title: 'Rejected', message: contact_rejected_dets, delay: 10000});
         }
 
         // Re-fetch the contacts from the DB to update the listing.
@@ -72,7 +72,7 @@ angular.module('pwcui')
         // Post a notification for the rejected contact.
         } else {
           var contact_candidate_dets = contact_candidate.name + " (" + contact_candidate.email + ")";
-          Notification.info({title: 'Dropped', message: contact_candidate_dets});
+          Notification.info({title: 'Dropped', message: contact_candidate_dets, delay: 10000});
         }
       }
 
@@ -100,7 +100,7 @@ angular.module('pwcui')
           }).then(function (response) {
             console.log(response);
             var contact_candidate_dets = contact_candidate.name + " (" + contact_candidate.email + ")";
-            Notification.success({title: 'Updated', message: contact_candidate_dets})
+            Notification.success({title: 'Updated', message: contact_candidate_dets, delay: 10000});
             $scope.refresh_contacts();
           });
         }
