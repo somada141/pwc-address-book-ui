@@ -28,6 +28,6 @@ angular
         redirectTo: '/'
       });
   }).constant('config', {
-    pabapi_url: 'http://35.189.137.216:8080'
+    pabapi_url: 'http://35.189.142.77:8080'
   });
 
