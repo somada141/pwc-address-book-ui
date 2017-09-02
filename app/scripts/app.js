@@ -28,6 +28,6 @@ angular
         redirectTo: '/'
       });
   }).constant('config', {
-    pabapi_url: 'http://localhost:8000'
+    pabapi_url: 'http://0.0.0.0:5555'
   });
 
